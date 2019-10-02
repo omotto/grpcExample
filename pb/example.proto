@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+service ExmapleService {
+    rpc Generate(ExampleRequest) returns (ExampleResponse);
+}
+
+message ExampleRequest {
+    string email = 1;
+    int32 size = 2;
+}
+
+message ExampleResponse {
+    string url = 1;
+}
