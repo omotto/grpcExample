@@ -48,17 +48,27 @@ func main() {
 		log.Fatalf("failed to load credentials: %v", err)
 	}
 
-	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(creds)/*, grpc.WithInsecure()*/, grpc.WithUnaryInterceptor(clientUnaryInterceptor))
+	conn, err := grpc.Dial(
+		address, // Address where gRPC server is located
+ 	    grpc.WithTransportCredentials(creds)/*, grpc.WithInsecure()*/, // Credentials?
+		grpc.WithUnaryInterceptor(clientUnaryInterceptor), // Unary Interceptor example to add token
+	)
+
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 
 	c := pb.NewExmapleServiceClient(conn)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second * 1)
 	defer cancel()
 
-	r, err := c.Generate(ctx, &pb.ExampleRequest{Email: "name", Size: 10}, grpc.UseCompressor(gzip.Name))
+	r, err := c.Generate(ctx, // Context
+		&pb.ExampleRequest{Email: "name", Size: 10}, // Method to call through gRPC
+		grpc.UseCompressor(gzip.Name), // Add compression on message
+		grpc.WaitForReady(true), // Add Wait for server ready on gRPC communication
+	)
+
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
