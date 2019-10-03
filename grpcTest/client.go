@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/oauth"
+	"google.golang.org/grpc/encoding/gzip"
 	"google.golang.org/grpc/testdata"
 	"grpcExample/pb"
 	"log"
@@ -57,7 +58,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	r, err := c.Generate(ctx, &pb.ExampleRequest{Email: "name", Size: 10})
+	r, err := c.Generate(ctx, &pb.ExampleRequest{Email: "name", Size: 10}, grpc.UseCompressor(gzip.Name))
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}

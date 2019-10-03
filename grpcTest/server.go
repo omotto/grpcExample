@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	_ "google.golang.org/grpc/encoding/gzip" // Needed to decompress incoming messages in GZIP
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/testdata"
 	"grpcExample/pb"
